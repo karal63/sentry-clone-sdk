@@ -1,0 +1,20 @@
+{
+  "name": "sentry-clone-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/karal63/sentry-clone-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/karal63/sentry-clone-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karal63/sentry-clone-sdk.git"
+  },
+  "license": "ISC",
+  "author": "leo",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
