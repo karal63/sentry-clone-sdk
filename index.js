@@ -1,19 +1,58 @@
-const { default: axios } = require("axios");
+import axios from "axios";
 
-// craete here error handlers that will catch errors/warnings, pass them through the props
-// place listeners in init function that will be called when user intializes project in main.ts file
+let projectId = null;
 
-function sendError(id, error) {
-  const payload = {
-    projectId: id,
-    title: error.name,
-    culprit: "myFunc(/features/getError)",
-    level: "error",
-    type: error.name,
-    message: error.name,
-  };
+/**
+ * Sends error details to backend
+ */
+async function sendError(error) {
+    const payload = {
+        projectId,
+        title: error.name || "Error",
+        culprit: error.stack?.split("\n")[1]?.trim() || "unknown",
+        level: "error",
+        type: error.name || "UnknownError",
+        message: error.message || "No message",
+        stack: error.stack || "",
+        timestamp: new Date().toISOString(),
+    };
 
-  axios.post("http://localhost:3000/api/issue", {
-    payload,
-  });
+    try {
+        await axios.post("http://localhost:3000/api/issue", payload);
+    } catch (err) {
+        console.warn("Error sending error log:", err);
+    }
+}
+
+/**
+ * Initialize global listeners
+ */
+export function initErrorHandlers(id, app) {
+    projectId = id;
+
+    // Catch Vue-specific errors
+    if (app && app.config && app.config.errorHandler) {
+        app.config.errorHandler = (err, instance, info) => {
+            console.error("Vue Error:", err, info);
+            sendError(err);
+        };
+    }
+
+    // Catch global JS errors
+    window.onerror = function (message, source, lineno, colno, error) {
+        console.error("Global Error:", message, source, lineno, colno, error);
+        sendError(error || new Error(message));
+    };
+
+    // Catch unhandled Promise rejections
+    window.addEventListener("unhandledrejection", function (event) {
+        console.error("Unhandled Promise Rejection:", event.reason);
+        sendError(
+            event.reason instanceof Error
+                ? event.reason
+                : new Error(event.reason)
+        );
+    });
+
+    console.log("[ErrorHandler] initialized for project:", projectId);
 }
