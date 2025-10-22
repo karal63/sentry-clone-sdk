@@ -31,8 +31,10 @@ export function initErrorHandlers(id, app) {
     projectId = id;
 
     // Catch Vue-specific errors
+    console.log(app, app.config, app.config.errorHandler);
     if (app && app.config && app.config.errorHandler) {
         app.config.errorHandler = (err, instance, info) => {
+            console.log("Vue error");
             console.error("Vue Error:", err, info);
             sendError(err);
         };
@@ -40,12 +42,14 @@ export function initErrorHandlers(id, app) {
 
     // Catch global JS errors
     window.onerror = function (message, source, lineno, colno, error) {
+        console.log("Global error");
         console.error("Global Error:", message, source, lineno, colno, error);
         sendError(error || new Error(message));
     };
 
     // Catch unhandled Promise rejections
     window.addEventListener("unhandledrejection", function (event) {
+        console.log("Promise error");
         console.error("Unhandled Promise Rejection:", event.reason);
         sendError(
             event.reason instanceof Error
