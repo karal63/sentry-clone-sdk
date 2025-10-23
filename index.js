@@ -27,7 +27,7 @@ async function sendError(error) {
 /**
  * Initialize global listeners
  */
-export function initErrorHandlers(id, app) {
+export function initErrorHandlers({ id, app }) {
     projectId = id;
 
     // Catch Vue-specific errors
