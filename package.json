@@ -1,6 +1,6 @@
 {
     "name": "sentry-clone-sdk",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "",
     "homepage": "https://github.com/karal63/sentry-clone-sdk#readme",
     "bugs": {
@@ -16,6 +16,9 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "peerDependencies": {
+        "vue": "^3.0.0"
     },
     "dependencies": {
         "axios": "^1.12.2"
