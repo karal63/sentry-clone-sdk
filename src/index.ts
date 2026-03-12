@@ -47,6 +47,3 @@ export function initErrorHandlers({ id, app }: { id: string; app: App }) {
 
     console.log("[ErrorHandler] initialized for project:", projectId);
 }
-
-// push changes
-// add readme
