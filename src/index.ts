@@ -27,20 +27,17 @@ export function initErrorHandlers({ id, app }: { id: string; app: App }) {
 
     if (app && app.config && app.config.errorHandler) {
         app.config.errorHandler = (err, instance, info) => {
-            console.error("Vue Error:", err, info);
             sendError(err as Error);
         };
     }
 
     // Catch global JS errors
     window.onerror = function (message, source, lineno, colno, error) {
-        console.error("Global Error:", message, source, lineno, colno, error);
         sendError(error || new Error(String(message)));
     };
 
     // Catch unhandled Promise rejections
     window.addEventListener("unhandledrejection", function (event) {
-        console.error("Unhandled Promise Rejection:", event.reason);
         sendError(
             event.reason instanceof Error
                 ? event.reason
@@ -50,3 +47,6 @@ export function initErrorHandlers({ id, app }: { id: string; app: App }) {
 
     console.log("[ErrorHandler] initialized for project:", projectId);
 }
+
+// push changes
+// add readme
