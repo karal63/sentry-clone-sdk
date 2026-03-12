@@ -1,11 +1,9 @@
 import axios from "axios";
+import { App } from "vue";
 
-let projectId = null;
+let projectId: string | null = null;
 
-/**
- * Sends error details to backend
- */
-async function sendError(error) {
+async function sendError(error: Error) {
     const payload = {
         projectId,
         title: error.name || "Error",
@@ -24,39 +22,31 @@ async function sendError(error) {
     }
 }
 
-/**
- * Initialize global listeners
- */
-export function initErrorHandlers({ id, app }) {
+export function initErrorHandlers({ id, app }: { id: string; app: App }) {
     projectId = id;
 
-    // Catch Vue-specific errors
-    console.log(app, app.config, app.config.errorHandler);
     if (app && app.config && app.config.errorHandler) {
         app.config.errorHandler = (err, instance, info) => {
-            console.log("Vue error");
-            console.error("Vue Error:", err, info);
-            sendError(err);
+            sendError(err as Error);
         };
     }
 
     // Catch global JS errors
     window.onerror = function (message, source, lineno, colno, error) {
-        console.log("Global error");
-        console.error("Global Error:", message, source, lineno, colno, error);
-        sendError(error || new Error(message));
+        sendError(error || new Error(String(message)));
     };
 
     // Catch unhandled Promise rejections
     window.addEventListener("unhandledrejection", function (event) {
-        console.log("Promise error");
-        console.error("Unhandled Promise Rejection:", event.reason);
         sendError(
             event.reason instanceof Error
                 ? event.reason
-                : new Error(event.reason)
+                : new Error(event.reason),
         );
     });
 
     console.log("[ErrorHandler] initialized for project:", projectId);
 }
+
+// push changes
+// add readme
